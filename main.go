@@ -20,7 +20,7 @@ func main() {
 	useRandom := pflag.BoolP("random", "r", false, "Use random input.")
 	randomRows := pflag.IntP("rows", "y", 50, "Number of rows for random input.")
 	randomColumns := pflag.IntP("columns", "x", 200, "Number of columns for random input.")
-	delay := pflag.DurationP("delay", "d", time.Second, "Delay between frames.")
+	delay := pflag.DurationP("delay", "d", 16*time.Millisecond, "Delay between frames.")
 	pflag.Parse()
 
 	grid, err := createGrid(*inputFile, *useRandom, *randomRows, *randomColumns)
