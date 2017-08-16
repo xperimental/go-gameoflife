@@ -41,8 +41,9 @@ func main() {
 		goterm.Printf("Loop time: %s\n", loopTime)
 		goterm.Flush()
 
-		if *delay > 0 {
-			time.Sleep(*delay)
+		wait := *delay - loopTime
+		if wait > 0 {
+			time.Sleep(wait)
 		}
 	}
 }
