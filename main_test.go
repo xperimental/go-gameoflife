@@ -111,3 +111,26 @@ func TestGetNextState(t *testing.T) {
 		})
 	}
 }
+
+func TestCalculateNextGeneration(t *testing.T) {
+	ascii := `........
+....*...
+...**...
+........`
+
+	expectedAscii := `........
+...**...
+...**...
+........
+`
+
+	grid, _ := parseAscii(ascii)
+
+	next := calculateNextGeneration(grid)
+
+	nextAscii := renderGrid(next)
+
+	if nextAscii != expectedAscii {
+		t.Errorf("got '%s', wanted '%s'", nextAscii, expectedAscii)
+	}
+}

@@ -81,20 +81,49 @@ func renderGrid(grid cellGrid) string {
 
 func calculateNextGeneration(input cellGrid) cellGrid {
 	next := cellGrid{}
-	for y, row := range input {
+	for rowIndex, row := range input {
 		nextRow := []bool{}
-		for x, cell := range row {
-			aliveNeighbors := calculateAliveNeighbors(input, x, y)
+		for colIndex, cell := range row {
+			aliveNeighbors := calculateAliveNeighbors(input, rowIndex, colIndex)
 			nextState := getNextState(cell, aliveNeighbors)
 			nextRow = append(nextRow, nextState)
 		}
 		next = append(next, nextRow)
 	}
-	return input
+	return next
 }
 
-func calculateAliveNeighbors(grid cellGrid, x, y int) int {
-	return 0
+func calculateAliveNeighbors(grid cellGrid, rowIndex, colIndex int) int {
+	alive := 0
+	for rowOffset := -1; rowOffset < 2; rowOffset++ {
+		for colOffset := -1; colOffset < 2; colOffset++ {
+			row := rowIndex + rowOffset
+			col := colIndex + colOffset
+
+			if row < 0 {
+				continue
+			}
+
+			if row >= len(grid) {
+				continue
+			}
+
+			if col < 0 {
+				continue
+			}
+
+			if col >= len(grid[row]) {
+				continue
+			}
+
+			if !grid[row][col] {
+				continue
+			}
+
+			alive++
+		}
+	}
+	return alive
 }
 
 func getNextState(state bool, aliveNeighbors int) bool {
