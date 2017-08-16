@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -36,12 +38,45 @@ func main() {
 
 type cellGrid [][]bool
 
+type invalidCharacterError rune
+
+func (e invalidCharacterError) Error() string {
+	return fmt.Sprintf("invalid character: %v", rune(e))
+}
+
 func parseAscii(input string) (cellGrid, error) {
-	return cellGrid{}, nil
+	result := cellGrid{}
+	lines := strings.Split(input, "\n")
+	for _, line := range lines {
+		gridLine := []bool{}
+		for _, rune := range line {
+			switch rune {
+			case '*':
+				gridLine = append(gridLine, true)
+			case '.':
+				gridLine = append(gridLine, false)
+			default:
+				return result, invalidCharacterError(rune)
+			}
+		}
+		result = append(result, gridLine)
+	}
+	return result, nil
 }
 
 func renderGrid(grid cellGrid) string {
-	return ""
+	out := &bytes.Buffer{}
+	for _, row := range grid {
+		for _, cell := range row {
+			if cell {
+				out.WriteRune('*')
+			} else {
+				out.WriteRune('.')
+			}
+		}
+		out.WriteRune('\n')
+	}
+	return out.String()
 }
 
 func calculateNextGeneration(input cellGrid) cellGrid {
