@@ -2,37 +2,43 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/buger/goterm"
+	"github.com/spf13/pflag"
 )
 
 func main() {
-	bytes, err := ioutil.ReadAll(os.Stdin)
+	inputFile := pflag.StringP("input", "i", "", "File to read start grid from.")
+	useRandom := pflag.BoolP("random", "r", false, "Use random input.")
+	randomRows := pflag.IntP("rows", "y", 50, "Number of rows for random input.")
+	randomColumns := pflag.IntP("columns", "x", 200, "Number of columns for random input.")
+	pflag.Parse()
+
+	grid, err := createGrid(*inputFile, *useRandom, *randomRows, *randomColumns)
 	if err != nil {
-		log.Fatalf("Error reading input: %s", err)
+		log.Fatalf("Error creating grid: %s", err)
 	}
 
-	if len(bytes) == 0 {
-		log.Fatalf("Need some input.")
-	}
-
-	grid, err := parseAscii(string(bytes))
-	if err != nil {
-		log.Fatalf("Error parsing starting grid: %s", err)
-	}
-
+	goterm.Clear()
 	for {
+		goterm.MoveCursor(1, 1)
+
 		start := time.Now()
 		ascii := renderGrid(grid)
-		fmt.Println(ascii)
+		goterm.Println(ascii)
 
 		grid = calculateNextGeneration(grid)
 		loopTime := time.Since(start)
-		fmt.Printf("Loop time: %s", loopTime)
+		goterm.Printf("Loop time: %s\n", loopTime)
+		goterm.Flush()
 	}
 }
 
@@ -42,6 +48,71 @@ type invalidCharacterError rune
 
 func (e invalidCharacterError) Error() string {
 	return fmt.Sprintf("invalid character: %v", rune(e))
+}
+
+func createGrid(inputFile string, random bool, rows, cols int) (cellGrid, error) {
+	if random {
+		return createRandomGrid(rows, cols)
+	}
+
+	grid, err := readGrid(inputFile)
+	if err != nil {
+		return cellGrid{}, fmt.Errorf("error reading grid: %s", err)
+	}
+
+	return grid, nil
+}
+
+func createRandomGrid(rows, cols int) (cellGrid, error) {
+	if rows == 0 {
+		return cellGrid{}, errors.New("need at least one row")
+	}
+
+	if cols == 0 {
+		return cellGrid{}, errors.New("need at least one column")
+	}
+
+	grid := cellGrid{}
+	for rowIndex := 0; rowIndex < rows; rowIndex++ {
+		row := []bool{}
+		for colIndex := 0; colIndex < cols; colIndex++ {
+			if rand.Float64() > 0.3 {
+				row = append(row, true)
+			} else {
+				row = append(row, false)
+			}
+		}
+		grid = append(grid, row)
+	}
+
+	return grid, nil
+}
+
+func readGrid(fileName string) (cellGrid, error) {
+	if len(fileName) == 0 {
+		return cellGrid{}, errors.New("need an input file")
+	}
+
+	file, err := os.Open(fileName)
+	if err != nil {
+		return cellGrid{}, fmt.Errorf("error opening file %s: %s", fileName, err)
+	}
+
+	bytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		return cellGrid{}, fmt.Errorf("error reading input: %s", err)
+	}
+
+	if len(bytes) == 0 {
+		return cellGrid{}, errors.New("input is empty")
+	}
+
+	grid, err := parseAscii(string(bytes))
+	if err != nil {
+		return cellGrid{}, fmt.Errorf("error parsing starting grid: %s", err)
+	}
+
+	return grid, nil
 }
 
 func parseAscii(input string) (cellGrid, error) {
