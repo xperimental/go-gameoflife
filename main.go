@@ -173,6 +173,10 @@ func calculateAliveNeighbors(grid cellGrid, rowIndex, colIndex int) int {
 	alive := 0
 	for rowOffset := -1; rowOffset < 2; rowOffset++ {
 		for colOffset := -1; colOffset < 2; colOffset++ {
+			if rowOffset == 0 && colOffset == 0 {
+				continue
+			}
+
 			row := rowIndex + rowOffset
 			col := colIndex + colOffset
 
