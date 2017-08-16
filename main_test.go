@@ -60,3 +60,54 @@ func TestRenderGrid(t *testing.T) {
 		t.Errorf("got '%s', wanted '%s'", ascii, expectedAscii)
 	}
 }
+
+func TestGetNextState(t *testing.T) {
+	for _, test := range []struct {
+		desc  string
+		state bool
+		alive int
+		next  bool
+	}{
+		{
+			desc:  "fewer than two -> dead",
+			state: true,
+			alive: 1,
+			next:  false,
+		},
+		{
+			desc:  "two -> alive",
+			state: true,
+			alive: 2,
+			next:  true,
+		},
+		{
+			desc:  "three -> alive",
+			state: true,
+			alive: 3,
+			next:  true,
+		},
+		{
+			desc:  "more than three -> dead",
+			state: true,
+			alive: 4,
+			next:  false,
+		},
+		{
+			desc:  "dead but three -> alive",
+			state: false,
+			alive: 3,
+			next:  true,
+		},
+	} {
+		test := test
+		t.Run(test.desc, func(t *testing.T) {
+			t.Parallel()
+
+			next := getNextState(test.state, test.alive)
+
+			if next != test.next {
+				t.Errorf("got next '%v', wanted '%v'", next, test.next)
+			}
+		})
+	}
+}

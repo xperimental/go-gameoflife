@@ -80,5 +80,31 @@ func renderGrid(grid cellGrid) string {
 }
 
 func calculateNextGeneration(input cellGrid) cellGrid {
+	next := cellGrid{}
+	for y, row := range input {
+		nextRow := []bool{}
+		for x, cell := range row {
+			aliveNeighbors := calculateAliveNeighbors(input, x, y)
+			nextState := getNextState(cell, aliveNeighbors)
+			nextRow = append(nextRow, nextState)
+		}
+		next = append(next, nextRow)
+	}
 	return input
+}
+
+func calculateAliveNeighbors(grid cellGrid, x, y int) int {
+	return 0
+}
+
+func getNextState(state bool, aliveNeighbors int) bool {
+	if state && aliveNeighbors == 2 {
+		return true
+	}
+
+	if aliveNeighbors == 3 {
+		return true
+	}
+
+	return false
 }
