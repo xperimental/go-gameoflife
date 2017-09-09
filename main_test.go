@@ -18,7 +18,7 @@ func TestParseAscii(t *testing.T) {
 		{false, false, false, false, false, false, false, false},
 	}
 
-	grid, err := parseAscii(ascii)
+	grid, err := parseASCII(ascii)
 
 	if err != nil {
 		t.Errorf("got error '%s', wanted nil", err)
@@ -33,7 +33,7 @@ func TestParseAsciiCharacterError(t *testing.T) {
 	ascii := "invalid"
 	expectedErr := invalidCharacterError('i')
 
-	_, err := parseAscii(ascii)
+	_, err := parseASCII(ascii)
 
 	if err != expectedErr {
 		t.Errorf("got error '%s', wanted '%s'", err, expectedErr)
@@ -48,7 +48,7 @@ func TestRenderGrid(t *testing.T) {
 		{false, false, false, false, false, false, false, false},
 	}
 
-	expectedAscii := `........
+	expectedASCII := `........
 ....*...
 ...**...
 ........
@@ -56,8 +56,8 @@ func TestRenderGrid(t *testing.T) {
 
 	ascii := renderGrid(grid)
 
-	if ascii != expectedAscii {
-		t.Errorf("got '%s', wanted '%s'", ascii, expectedAscii)
+	if ascii != expectedASCII {
+		t.Errorf("got '%s', wanted '%s'", ascii, expectedASCII)
 	}
 }
 
@@ -115,7 +115,7 @@ func TestGetNextState(t *testing.T) {
 func TestCalculateNextGeneration(t *testing.T) {
 	for _, test := range []struct {
 		ascii         string
-		expectedAscii string
+		expectedASCII string
 	}{
 		{
 			ascii: `........
@@ -123,7 +123,7 @@ func TestCalculateNextGeneration(t *testing.T) {
 ...**...
 ........`,
 
-			expectedAscii: `........
+			expectedASCII: `........
 ...**...
 ...**...
 ........
@@ -135,21 +135,21 @@ func TestCalculateNextGeneration(t *testing.T) {
 ...**...
 ........`,
 
-			expectedAscii: `........
+			expectedASCII: `........
 ...**...
 ...**...
 ........
 `,
 		},
 	} {
-		grid, _ := parseAscii(test.ascii)
+		grid, _ := parseASCII(test.ascii)
 
 		next := calculateNextGeneration(grid)
 
-		nextAscii := renderGrid(next)
+		nextASCII := renderGrid(next)
 
-		if nextAscii != test.expectedAscii {
-			t.Errorf("got '%s', wanted '%s'", nextAscii, test.expectedAscii)
+		if nextASCII != test.expectedASCII {
+			t.Errorf("got '%s', wanted '%s'", nextASCII, test.expectedASCII)
 		}
 	}
 }

@@ -120,7 +120,7 @@ func readGrid(fileName string) (cellGrid, error) {
 		return cellGrid{}, errors.New("input is empty")
 	}
 
-	grid, err := parseAscii(string(bytes))
+	grid, err := parseASCII(string(bytes))
 	if err != nil {
 		return cellGrid{}, fmt.Errorf("error parsing starting grid: %s", err)
 	}
@@ -128,7 +128,7 @@ func readGrid(fileName string) (cellGrid, error) {
 	return grid, nil
 }
 
-func parseAscii(input string) (cellGrid, error) {
+func parseASCII(input string) (cellGrid, error) {
 	result := cellGrid{}
 	lines := strings.Split(input, "\n")
 	for _, line := range lines {
