@@ -16,3 +16,12 @@ Usage of ./go-gameoflife:
 The program can either load an existing "grid" from an input file using the `--input` option or randomly generate a grid using the `--random`, `--rows` and `--columns` options.
 
 The `--delay` option sets a frame delay. The generation computation time is subtracted from this delay, so as long as the computation is faster than the delay frames should be output at the specified rate.
+
+Examples:
+
+```bash
+# Run the glidergun example
+go-gameoflife -i glidergun.txt
+# Run a random (200x50) grid
+go-gameoflife -r
+```
