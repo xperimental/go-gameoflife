@@ -83,6 +83,8 @@ func createRandomGrid(rows, cols int) (cellGrid, error) {
 		return cellGrid{}, errors.New("need at least one column")
 	}
 
+	rand.Seed(time.Now().Unix())
+
 	grid := cellGrid{}
 	for rowIndex := 0; rowIndex < rows; rowIndex++ {
 		row := []bool{}
