@@ -23,6 +23,11 @@ func main() {
 	delay := pflag.DurationP("delay", "d", 16*time.Millisecond, "Delay between frames.")
 	pflag.Parse()
 
+	if len(*inputFile) == 0 && !*useRandom {
+		pflag.Usage()
+		return
+	}
+
 	grid, err := createGrid(*inputFile, *useRandom, *randomRows, *randomColumns)
 	if err != nil {
 		log.Fatalf("Error creating grid: %s", err)
