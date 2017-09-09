@@ -1,6 +1,6 @@
 # go-gameoflife
 
-This is a naive implementation of [Conway's Game of Life]() in Golang with output on the terminal (no graphics).
+This is a naive implementation of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) in Golang with output on the terminal (no graphics).
 
 ## Usage
 
