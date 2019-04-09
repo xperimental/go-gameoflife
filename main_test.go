@@ -153,3 +153,16 @@ func TestCalculateNextGeneration(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkNextGeneration(b *testing.B) {
+	rows := 200
+	cols := 200
+	grid, err := createRandomGrid(rows, cols)
+	if err != nil {
+		b.Fatalf("error creating grid: %s", err)
+	}
+
+	for n := 0; n < b.N; n++ {
+		calculateNextGeneration(grid)
+	}
+}
